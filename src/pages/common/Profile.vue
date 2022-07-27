@@ -16,7 +16,7 @@
 
                           <div class="form-group">
                             <label for="">Name</label>
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" v-model="name">
                           </div>
 
                         </div>
@@ -24,7 +24,7 @@
 
                           <div class="form-group">
                             <label for="">Email</label>
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" v-model="email">
                           </div>
 
                         </div>
@@ -33,11 +33,11 @@
                           <label class="">Gender</label>
                           <div class="m-t-15 m-checkbox-inline custom-radio-ml">
                           <div class="form-check form-check-inline radio radio-primary">
-                            <input class="form-check-input" id="radioinline1" type="radio" name="radio1" value="option1" data-bs-original-title="" title="">
+                            <input class="form-check-input" id="radioinline1" type="radio" v-model="gender" :value="male" data-bs-original-title="" title="">
                             <label class="form-check-label mb-0" for="radioinline1">Male</label>
                           </div>
                           <div class="form-check form-check-inline radio radio-primary">
-                            <input class="form-check-input" id="radioinline2" type="radio" name="radio1" value="option1" data-bs-original-title="" title="">
+                            <input class="form-check-input" id="radioinline2" type="radio" v-model="gender" :value="female" data-bs-original-title="" title="">
                             <label class="form-check-label mb-0" for="radioinline2">Female</label>
                           </div>
                           </div>
@@ -67,7 +67,7 @@
 
                           <div class="form-group">
                             <label for="">Bio</label>
-                            <textarea rows="5" type="text" class="form-control" placeholder="A brief about yourself"></textarea>
+                            <textarea rows="5" v-model="bio" type="text" class="form-control" placeholder="A brief about yourself"></textarea>
                           </div>
 
                         </div>
@@ -75,7 +75,7 @@
 
                           <div class="form-group">
                             <label for="">Address</label>
-                            <textarea rows="5" type="text" class="form-control" placeholder="Your address"></textarea>
+                            <textarea rows="5" v-model="address" type="text" class="form-control" placeholder="Your address"></textarea>
                           </div>
 
                         </div>
@@ -117,12 +117,12 @@
                         <div class="col-md-6">
                               <div class="form-group">
                                   <label for="">Language Preference</label>
-                                  <select name="language" id="" class="form-control">
+                                  <select v-model="language" name="language" id="" class="form-control">
                                       
-                                      <option value="">--Select Language--</option>
-                                      <option value="Nigeria">English</option>
-                                      <option value="Ghana">French</option>
-                                      <option value="Cameroon">Others</option>
+                                      <option :value="''">--Select Language--</option>
+                                      <option :value="'English'">English</option>
+                                      <option :value="'French'">French</option>
+                                      <option :value="'Others'">Others</option>
                                   </select>
                               </div>
                         </div>
@@ -315,10 +315,20 @@
                           
                           <div class="form-group">
                               <label for="">Any Other Challenges?</label>
-                              <input type="text" name="other_challenges" value="{{$user->user_profile->other_challenges??''}}" class="form-control">
+                              <input type="text" name="other_challenges" value="" class="form-control">
 
                           </div>
 
+                        </div>
+
+                        <div class="col-md-12 py-">
+                          <div class="col-md-4 mx-auto">
+
+                            <button v-if="loading" class="btn btn-primary btn-lg btn-block" disabled>Submitting...</button>
+
+                            <button v-else class="btn btn-primary btn-lg btn-block">Submit</button>
+
+                          </div>
                         </div>
 
 
@@ -378,18 +388,19 @@
         other_challenges: '',
         hope_to_gain: '',
 
+        loading: false
+
       };
     },
 
     methods: {
       getProfile(){
 
+
+
                   axios({
                     method: "get",
                     url: process.env.VUE_APP_URL+'/api/users',
-                    params: {
-                       usercode: this.$route.params.id
-                    },
                     headers: {
                         'Access-Control-Allow-Origin': '*',
                         'Content-type': 'application/json',
@@ -406,6 +417,12 @@
 
                       this.user = response.data
 
+
+                      this.name = response.data.name
+                      this.email = response.data.email
+
+
+
                       console.log(response);
 
 
@@ -419,6 +436,9 @@
                     });
       },
       updateProfile(){
+
+
+        this.loading = true
 
                   axios({
                     method: "post",

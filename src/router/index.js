@@ -122,7 +122,7 @@ const routes = [
     },
 
     {
-      path: '',
+      path: 'profile',
       name: 'profile',
       component: Profile,
       meta: {
@@ -203,7 +203,7 @@ const routes = [
     },
 
     {
-      path: '',
+      path: 'profile',
       name: 'profile',
       component: Profile,
       meta: {
